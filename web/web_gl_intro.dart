@@ -39,7 +39,7 @@ class WebGLScene{
       Vector4 color = new Vector4(random.nextDouble(), random.nextDouble(), random.nextDouble(), 1.0);
       quads.add(new Quad(gl, quadShader,  x, y, w, h, angle, color));
     }
-    new Async.Timer(new Duration(milliseconds: 30), () => window.requestAnimationFrame(render));
+    window.requestAnimationFrame(render);
   }
   
 
@@ -68,8 +68,7 @@ class WebGLScene{
       q.angle =  q.angle  + 0.3;
       q.render();
     });
-    window.requestAnimationFrame(render);
-    
+    new Async.Timer(new Duration(milliseconds: 30), () => window.requestAnimationFrame(render));
   }  
 }
 
