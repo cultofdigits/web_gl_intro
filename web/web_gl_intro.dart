@@ -2,6 +2,7 @@ library web_gl_intro;
 
 import 'dart:html';
 import 'dart:math' as Math;
+import 'dart:async' as Async;
 import 'dart:web_gl' as WebGL;
 import "dart:typed_data";
 import "package:vector_math/vector_math.dart";
@@ -13,7 +14,7 @@ class WebGLScene{
   CanvasElement canvas;
   WebGL.RenderingContext gl;
   Shader quadShader;
-  Quad quad_red, quad_blue;
+  List<Quad> quads;
   
   WebGLScene(this.canvas){
   
@@ -26,10 +27,19 @@ class WebGLScene{
     gl.blendFunc(WebGL.SRC_ALPHA, WebGL.ONE_MINUS_SRC_ALPHA);
     
     quadShader = new Shader(gl);
-    quad_red = new Quad(gl, quadShader, 100, 100, 20, 40, new Vector4(1.0, 0.0, 0.0, 1.0));
-    quad_blue = new Quad(gl, quadShader, 200, 50, 40, 10, new Vector4(0.0, 0.0, 1.0, 1.0));
+    quads  = new List<Quad>();
     
-    window.requestAnimationFrame(render);
+    var random = new Math.Random();
+    for (int i=0; i<10; i++){
+      int w = random.nextInt(100);
+      int h = random.nextInt(100);
+      int x = random.nextInt(canvas.width-w);
+      int y = random.nextInt(canvas.height-h);
+      double angle = random.nextDouble();
+      Vector4 color = new Vector4(random.nextDouble(), random.nextDouble(), random.nextDouble(), 1.0);
+      quads.add(new Quad(gl, quadShader,  x, y, w, h, angle, color));
+    }
+    new Async.Timer(new Duration(milliseconds: 30), () => window.requestAnimationFrame(render));
   }
   
 
@@ -54,8 +64,12 @@ class WebGLScene{
     cameraMatrix.scale(2.0/ canvas.width, 2.0 / canvas.height);
     gl.uniformMatrix4fv(gl.getUniformLocation(quadShader.program, "uCameraMatrix"), false, cameraMatrix.storage);
     
-    quad_red.render();
-    quad_blue.render();
+    quads.forEach((q){
+      q.angle =  q.angle  + 0.03;
+      q.render();
+    });
+    window.requestAnimationFrame(render);
+    
   }  
 }
 

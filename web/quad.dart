@@ -7,8 +7,9 @@ class Quad{
   WebGL.Buffer vertexBuffer, indexBuffer;
   int x, y, w, h;
   Vector4 color;
+  double angle;
   
-  Quad(this.gl, this.shader, this.x, this.y, this.w, this.h, this.color){
+  Quad(this.gl, this.shader, this.x, this.y, this.w, this.h, this.angle, this.color){
     gl.useProgram(shader.program);
 
     aPosition       = gl.getAttribLocation(shader.program, 'aPosition');
@@ -27,13 +28,15 @@ class Quad{
     gl.bindBuffer(WebGL.ELEMENT_ARRAY_BUFFER, indexBuffer);
     gl.bufferData(WebGL.ELEMENT_ARRAY_BUFFER, new Int16List.fromList([0,1,2,0,2,3]), WebGL.STATIC_DRAW);
   }
-  
+    
   render(){
     Matrix4 objectMat = new Matrix4.identity();
     //создаем матрицу вида
     objectMat.setIdentity();
     //передвиним объект на нужное расстояние
     objectMat.translate(1.0*x, 1.0*y );
+    //повернем прямоугольник на нужный угол
+    objectMat.rotateZ(angle);
     //изменим масштаб, чтобы прямоугольник был нужного размера
     objectMat.scale(1.0*w, 1.0*h);
     //передаем матрицу в шейдер
