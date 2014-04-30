@@ -35,8 +35,15 @@ class Quad{
     objectMat.setIdentity();
     //передвиним объект на нужное расстояние
     objectMat.translate(1.0*x, 1.0*y );
+    
     //повернем прямоугольник на нужный угол
-    objectMat.rotateZ(angle);
+    Matrix4 rotate_tmp = new Matrix4.identity();
+    rotate_tmp.translate(w/2, h/2);
+    objectMat.multiply(rotate_tmp);
+    objectMat.rotateZ(angle * Math.PI / 180.0);
+    rotate_tmp.invert();
+    objectMat.multiply(rotate_tmp);
+    
     //изменим масштаб, чтобы прямоугольник был нужного размера
     objectMat.scale(1.0*w, 1.0*h);
     //передаем матрицу в шейдер

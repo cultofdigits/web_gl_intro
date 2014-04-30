@@ -65,7 +65,7 @@ class WebGLScene{
     gl.uniformMatrix4fv(gl.getUniformLocation(quadShader.program, "uCameraMatrix"), false, cameraMatrix.storage);
     
     quads.forEach((q){
-      q.angle =  q.angle  + 0.03;
+      q.angle =  q.angle  + 0.3;
       q.render();
     });
     window.requestAnimationFrame(render);
