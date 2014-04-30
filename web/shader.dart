@@ -13,8 +13,10 @@ class Shader{
             precision highp float;
 
             attribute vec3 aPosition;
+            uniform mat4 uCameraMatrix;
+            uniform mat4 uObjectMatrix;
             void main() {
-                 gl_Position = vec4(aPosition, 1);
+                 gl_Position = uCameraMatrix*uObjectMatrix*vec4(aPosition, 1);
             }""";
     fragmentShaderCode = """
           precision highp float;
